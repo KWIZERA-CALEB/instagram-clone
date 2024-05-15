@@ -13,12 +13,15 @@ const app = express()
 
 app.use(bodyParser.json())
 
-app.use(cors({
-    "origin": "*",
-     "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-     "preflightContinue": false,
-     "optionsSuccessStatus": 204
-}))
+app.use(cors())
+
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE')
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization')
+    res.setHeader('Access-Control-Allow-Credentials', true)
+    next()
+})
 
 
 //configure to have access on uploads
