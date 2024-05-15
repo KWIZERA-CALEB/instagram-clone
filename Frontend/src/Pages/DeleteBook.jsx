@@ -12,7 +12,7 @@ const DeleteBook = () => {
   const HandleDeleteBook = ()=> {
       setLoading(true)
       axios
-        .delete(`http://localhost:5000/book/destroy/${id}`)
+        .delete(`https://mern-stack-deploy-server.vercel.app/book/destroy/${id}`)
           .then(()=> {
             setLoading(false)
             navigate('/')
