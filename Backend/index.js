@@ -18,7 +18,7 @@ app.use(cors({
      "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
      "preflightContinue": false,
      "optionsSuccessStatus": 204
-))
+}))
 
 
 //configure to have access on uploads
