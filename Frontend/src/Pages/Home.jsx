@@ -11,7 +11,7 @@ const Home = () => {
   useEffect(()=> {
     setLoading(true)
     axios
-        .get('http://localhost:5000/book')
+        .get('https://mern-stack-deploy-server.vercel.app/book')
             .then((response)=> {
                 setLoading(false)
                 setBooks(response.data.data)
@@ -33,7 +33,7 @@ const Home = () => {
                         <p>{book.book_name}</p>
                         <p>{book.author}</p>
                         <p>{book.description}</p>
-                        <img src={`http://localhost:5000/${book.image}`} className='w-[150px]' alt="Image" />
+                        <img src={`https://mern-stack-deploy-server.vercel.app/${book.image}`} className='w-[150px]' alt="Image" />
                         <Link to={`/delete/${book._id}`}>Delete</Link>
                         <Link to={`/update/${book._id}`}>Update</Link>
                     </div>
