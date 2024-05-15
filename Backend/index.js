@@ -13,7 +13,12 @@ const app = express()
 
 app.use(bodyParser.json())
 
-app.use(cors())
+app.use(cors({
+    "origin": "https://mern-stack-deploy.vercel.app",
+     "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+     "preflightContinue": false,
+     "optionsSuccessStatus": 204
+))
 
 
 //configure to have access on uploads
