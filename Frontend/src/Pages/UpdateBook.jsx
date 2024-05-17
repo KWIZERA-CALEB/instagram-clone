@@ -15,7 +15,7 @@ const UpdateBook = () => {
   //then update
   useEffect(()=> {
       setLoading(true)
-      axios.get(`https://mern-stack-deploy-server.vercel.app/book/single/${id}`)
+      axios.get(`https://mern-stack-deploy-server.vercel.app/book/update/${id}`)
         .then((response)=> {
             setBookName(response.data.book_name)
             setAuthor(response.data.author)
