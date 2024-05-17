@@ -1,16 +1,19 @@
 {
-    "version": 2,
-    "builds": [{ "src": "index.js", "use": "@vercel/node" }],
-  
-    "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "/",
-        "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-        "headers": {
-          "Access-Control-Allow-Origin": "https://mern-stack-deploy.vercel.app",
-          "Access-Control-Allow-Credentials": "true"
-        }
+  "version": 2,
+  "builds": [{ "src": "index.js", "use": "@vercel/node" }],
+  "routes": [
+    {
+      "src": "/uploads/(.*)",
+      "dest": "/uploads/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/",
+      "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+      "headers": {
+        "Access-Control-Allow-Origin": "https://mern-stack-deploy.vercel.app",
+        "Access-Control-Allow-Credentials": "true"
       }
-    ]
+    }
+  ]
 }
