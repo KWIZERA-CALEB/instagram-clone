@@ -30,7 +30,7 @@ const AddBook = () => {
     setLoading(true)
     //use axios to send request to backend
     axios
-      .post('https://mern-stack-deploy-server.vercel.app/book/add', data, {
+      .post('https://mern-backend-jy18.onrender.com/book/add', data, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
