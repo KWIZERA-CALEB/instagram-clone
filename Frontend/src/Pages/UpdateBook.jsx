@@ -15,7 +15,7 @@ const UpdateBook = () => {
   //then update
   useEffect(()=> {
       setLoading(true)
-      axios.get(`https://mern-stack-deploy-server.vercel.app/book/update/${id}`)
+      axios.get(`https://mern-backend-jy18.onrender.com/book/update/${id}`)
         .then((response)=> {
             setBookName(response.data.book_name)
             setAuthor(response.data.author)
@@ -40,7 +40,7 @@ const UpdateBook = () => {
     setLoading(true)
     //use axios to send request to backend
     axios
-      .put(`https://mern-stack-deploy-server.vercel.app/book/update/${id}`, data)
+      .put(`https://mern-backend-jy18.onrender.com/book/update/${id}`, data)
         .then(()=> {
             setLoading(false)
             navigate('/')
