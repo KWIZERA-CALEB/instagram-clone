@@ -1,20 +1,19 @@
-import React, {useEffect, useState} from 'react'
-import {Routes, Route} from 'react-router-dom'
-
-import AddBook from './Pages/AddBook'
-import DeleteBook from './Pages/DeleteBook'
-import UpdateBook from './Pages/UpdateBook'
-import Home from './Pages/Home'
+import { Routes, Route } from 'react-router-dom'
+import HomePage from './pages/HomePage'
+import NotFoundPage from './pages/NotFoundPage'
+import LoginPage from './pages/LoginPage'
+import SignupPage from './pages/SignupPage'
+import ProfilePage from './pages/ProfilePage'
 
 const App = () => {
-  
   return (
     <>
       <Routes>
-        <Route path="/" element={<Home />}></Route>
-        <Route path="/add" element={<AddBook />}></Route>
-        <Route path="/delete/:id" element={<DeleteBook />}></Route>
-        <Route path="/update/:id" element={<UpdateBook />}></Route>
+        <Route path='/' element={<HomePage />} />
+        <Route path='/login' element={<LoginPage />} />
+        <Route path='/profile' element={<ProfilePage />} />
+        <Route path='/signup' element={<SignupPage />} />
+        <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </>
   )
