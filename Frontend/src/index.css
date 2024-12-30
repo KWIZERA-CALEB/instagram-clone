@@ -1,3 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+    background-color: #1a202c;
+    margin: 0;
+    height: 100%;
+    color: white;
+}
+html {
+    height: 100%;
+}
+
+.bulleted {
+    list-style-type: circle;
+}
+
+
+.custom-input {
+    background-color: #000 !important;
+}
+  
+.custom-input:hover {
+    background-color: #000 !important;
+    cursor: text !important;
+}
+  
+.custom-input:focus {
+    background-color: #000 !important;
+}
+
+.preloader-bar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    overflow: hidden;
+    z-index: 9999;
+}
+
+.preloader-bar {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(to right, #f9ce34, #ee2a7b, #6228d7, #27c4f5);
+    background-size: 200% 100%;
+    animation: loadingBar 5s linear infinite;
+}
+
+@keyframes loadingBar {
+    0% {
+        width: 0;
+        background-position: 0% 0;
+    }
+    100% {
+        width: 100%;
+        background-position: 100% 0;
+    }
+}
+
+/* Customizing the underline */
+.ant-tabs-ink-bar {
+    background: linear-gradient(to right, #3b82f6, #ef4444) !important;
+    height: 3px !important;
+}
+  
+  /* Customizing tab colors */
+.ant-tabs-tab.ant-tabs-tab-active .custom-tab {
+    color: #3b82f6 !important; /* Active tab color */
+}
+  
+.ant-tabs-tab .custom-tab {
+    color: #fff !important; /* Default tab color */
+    transition: color 0.3s ease;
+}
+  
+.ant-tabs-tab:hover .custom-tab {
+    color: #78b2e7 !important; /* Hover tab color */
+}
+  
+.ant-tabs-nav-wrap {
+    border-bottom: 1px;
+    border-style: solid;
+    border-color: #333;
+}
+
+.custom-modal .ant-modal-content {
+    background-color: #000 !important; /* Override default background */
+    color: #fff; /* Optional: Adjust text color for readability */
+}
+
+
+.ant-modal-close {
+    color: #fff !important;
+}
+
+.modal-open {
+    backdrop-filter: blur(10px); /* Adjust the blur intensity */
+}
+
+.modal-open {
+    overflow: hidden;
+}
+
+.modal-open {
+    background: rgba(0, 0, 0, 0.6) !important; /* Dim the overlay */
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  width: 20px;
+  height: 20px;
+  padding: 5px;
+  border-radius: 50%;
+  background: #fff;
+  color: rgba(0, 0, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.swiper-button-prev {
+  left: 0px;
+}
+
+.swiper-button-next {
+  right: 0px;
+}
+
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  font-size: 12px;
+}
+
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  background: #fff;
+}
