@@ -15,7 +15,7 @@ app.use(cookieParser());
 const corsOptions = {
     origin: [
         'http://localhost:5173',             
-        'https://boobix.vercel.app' 
+        'https://twikaapp.netlify.app' 
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
