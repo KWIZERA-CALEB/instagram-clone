@@ -1773,6 +1773,11 @@ globalthis@^1.0.4:
     define-properties "^1.2.1"
     gopd "^1.0.1"
 
+goober@^2.1.10:
+  version "2.1.16"
+  resolved "https://registry.npmjs.org/goober/-/goober-2.1.16.tgz#7d548eb9b83ff0988d102be71f271ca8f9c82a95"
+  integrity sha512-erjk19y1U33+XAMe1VTvIONHYoSqE4iS7BYUZfHaqeohLmnC0FdxEh7rQU+6MZ4OajItzjZFSRtVANrQwNq6/g==
+
 gopd@^1.0.1, gopd@^1.2.0:
   version "1.2.0"
   resolved "https://registry.npmjs.org/gopd/-/gopd-1.2.0.tgz#89f56b8217bdbc8802bd299df6d7f1081d7e51a1"
@@ -2895,6 +2900,18 @@ react-dom@^18.2.0:
     loose-envify "^1.1.0"
     scheduler "^0.23.2"
 
+react-hook-form@^7.54.2:
+  version "7.54.2"
+  resolved "https://registry.npmjs.org/react-hook-form/-/react-hook-form-7.54.2.tgz#8c26ed54c71628dff57ccd3c074b1dd377cfb211"
+  integrity sha512-eHpAUgUjWbZocoQYUHposymRb4ZP6d0uwUnooL2uOybA9/3tPUvoAKqEWK1WaSiTxxOfTpffNZP7QwlnM3/gEg==
+
+react-hot-toast@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.npmjs.org/react-hot-toast/-/react-hot-toast-2.4.1.tgz#df04295eda8a7b12c4f968e54a61c8d36f4c0994"
+  integrity sha512-j8z+cQbWIM5LY37pR6uZR6D4LfseplqnuAO4co4u8917hBUvXlEqyP1ZzqVLcqoyUesZZv/ImreoCeHVDpE5pQ==
+  dependencies:
+    goober "^2.1.10"
+
 react-is@^16.13.1:
   version "16.13.1"
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
@@ -3601,3 +3618,8 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.npmjs.org/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+zustand@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.npmjs.org/zustand/-/zustand-5.0.2.tgz#f7595ada55a565f1fd6464f002a91e701ee0cfca"
+  integrity sha512-8qNdnJVJlHlrKXi50LDqqUNmUbuBjoKLrYQBnoChIbVph7vni+sY+YpvdjXG9YLd/Bxr6scMcR+rm5H3aSqPaw==
