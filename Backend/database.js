@@ -1,19 +1,12 @@
-const express = require('express')
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
-const db_name = 'book_store'
-const db_url = `mongodb+srv://kwizeracaleb91:l0a0BWqmLeHXp26L@mernvercel.ezhejls.mongodb.net/${db_name}?retryWrites=true&w=majority&appName=mernvercel`
+export const connectDB = async () => {
+    const dbConnectionString = process.env.NODE_ENV === 'production' ? process.env.PROD_DB_STRING : process.env.DEV_DB_STRING
 
-const connect = function(cb) {
-    mongoose.connect(db_url)
-        .then((response) => {
-            console.log('Database connected')
-            cb()
-        })
-        .catch((error) => {
-            console.log(error)
-            cb()
-        })
-}
-
-module.exports = {connect}
+    try {
+      const conn = await mongoose.connect(dbConnectionString);
+      console.log(`MongoDB connected`);
+    } catch (error) {
+      console.log("MongoDB connection error:", error);
+    }
+};

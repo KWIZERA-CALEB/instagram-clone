@@ -1,6 +1,8 @@
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { Button, Modal, Input } from 'antd'
 import { useState } from 'react'
+import { useAuthStore } from "../../store/useAuthStore";
+import { usePostStore } from "../../store/usePostStore"
 
 const { TextArea } = Input;
 
@@ -9,6 +11,31 @@ const Sidebar = () => {
     const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false)
     const [postDescription, setPostDescription] = useState('Post Description')
     const [color, setColor] = useState("#1c7d71");
+    const navigate = useNavigate();
+
+
+    const { authUser, logout } = useAuthStore()
+    const { createPost } = usePostStore()
+
+    const handleAddPost = async (e) => {
+        e.preventDefault()
+        try {
+            const data = {
+                description: postDescription,
+                color: color
+            }
+            await createPost(data)
+            setIsCreatePostModalOpen(false)
+            document.body.classList.remove("modal-open");
+        } catch(error) {
+            console.log(error)
+        }
+    }
+
+    const handleLogout = async () => { 
+        await logout(); 
+        navigate('/login'); 
+    };
 
     const showCreatePostModal = () => {
         setIsCreatePostModalOpen(true)
@@ -56,7 +83,7 @@ const Sidebar = () => {
                 </div>
                 <div className='flex flex-row space-x-[15px] mt-[10px]'>
                     <Button className='bg-[#333]/[50%] font-afacadFlux mt-[5px] font-bold border-[0px] text-[#fff]' onClick={handleCancel}>Cancel</Button>
-                    <Button className='bg-sky-400 font-afacadFlux mt-[5px] font-bold border-[0px] text-[#fff]'>Twika Post</Button>
+                    <Button htmlType="button" onClick={handleAddPost} className='bg-sky-400 font-afacadFlux mt-[5px] font-bold border-[0px] text-[#fff]'>Twika Post</Button>
                 </div>
             </div>
         </Modal>
@@ -103,24 +130,33 @@ const Sidebar = () => {
                     </svg>
                     <p className='text-[#fff] font-bold font-afacadFlux'>Notifications</p>
                 </div>
-                <div onClick={showCreatePostModal} className='flex flex-row items-center space-x-[12px] w-full rounded-[6px] cursor-pointer hover:bg-[#333]/[50%] p-[6px]'>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height='20' width='20' fill="#fff">
-                        <path d="M11 11V7H13V11H17V13H13V17H11V13H7V11H11ZM12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20Z"></path>
-                    </svg>
-                    <p className='text-[#fff] font-bold font-afacadFlux'>Create</p>
-                </div>
-                <div className={currentPath.pathname == '/profile' ? 'flex flex-row items-center space-x-[12px] w-full rounded-[6px] cursor-pointer bg-[#333]/[50%] p-[6px]' : 'flex flex-row items-center space-x-[12px] w-full rounded-[6px] cursor-pointer hover:bg-[#333]/[50%] p-[6px]'}>
-                    <div className='w-[20px] h-[20px] bg-slate-500 rounded-full'>
-                        <img src="/images/memo_32.png" className='w-full h-full object-cover object-center' alt="Profile" />
+                {authUser ? 
+                    <div onClick={showCreatePostModal} className='flex flex-row items-center space-x-[12px] w-full rounded-[6px] cursor-pointer hover:bg-[#333]/[50%] p-[6px]'>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height='20' width='20' fill="#fff">
+                            <path d="M11 11V7H13V11H17V13H13V17H11V13H7V11H11ZM12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20Z"></path>
+                        </svg>
+                        <p className='text-[#fff] font-bold font-afacadFlux'>Create</p>
                     </div>
-                    <p className='text-[#fff] font-bold font-afacadFlux'><Link to='/profile'>Profile</Link></p>
+                    :
+                    <div className='flex flex-row items-center space-x-[12px] w-full rounded-[6px] cursor-pointer hover:bg-[#333]/[50%] p-[6px]'>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height='20' width='20' fill="#fff">
+                            <path d="M11 11V7H13V11H17V13H13V17H11V13H7V11H11ZM12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20Z"></path>
+                        </svg>
+                        <p className='text-[#fff] font-bold font-afacadFlux'><Link to='/login'>Create</Link></p>
+                    </div>
+                }
+                <div className={currentPath.pathname == '/profile' ? 'flex flex-row items-center space-x-[12px] w-full rounded-[6px] cursor-pointer bg-[#333]/[50%] p-[6px]' : 'flex flex-row items-center space-x-[12px] w-full rounded-[6px] cursor-pointer hover:bg-[#333]/[50%] p-[6px]'}>
+                    <div className='w-[20px] h-[20px] bg-slate-500 overflow-hidden rounded-full'>
+                        <img src={authUser?.profileImage || "/images/pic.webp"} className='w-full h-full object-cover object-center' alt="Profile" />
+                    </div>
+                    <p className='text-[#fff] font-bold font-afacadFlux'><Link to={authUser ? '/profile' : '/login'}>Profile</Link></p>
                 </div>
             </div>
         </div>
         {/* top sidebar */}
 
         {/* bottom sidebar */}
-        <div className='flex flex-row items-center space-x-[12px] w-full rounded-[6px] cursor-pointer hover:bg-[#333]/[50%] p-[6px]'>
+        <div onClick={handleLogout} className='flex flex-row items-center space-x-[12px] w-full rounded-[6px] cursor-pointer hover:bg-[#333]/[50%] p-[6px]'>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height='20' width='20' fill="#fff">
                 <path d="M3 4H21V6H3V4ZM3 11H21V13H3V11ZM3 18H21V20H3V18Z"></path>
             </svg>
