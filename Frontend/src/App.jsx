@@ -9,10 +9,13 @@ import { useEffect } from 'react'
 import ProtectedRoute from './components/atoms/ProtectedRoute'
 import AuthProtectedRoute from './components/atoms/AuthProtectedRoute'
 import ExplorePage from './pages/ExplorePage'
+import InboxPage from './pages/InboxPage'
 
 
 const App = () => {
-  const { checkAuth } = useAuthStore()
+  const { checkAuth, onlineUsers } = useAuthStore()
+
+  console.log(onlineUsers)
 
   useEffect(() => {
     checkAuth();
@@ -23,6 +26,9 @@ const App = () => {
       <Routes>
         <Route path='/' element={
             <HomePage />
+        } />
+        <Route path='/inbox' element={
+            <InboxPage />
         } />
         <Route path='/explore' element={
             <ExplorePage />
