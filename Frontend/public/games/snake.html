@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Basic Snake HTML Game</title>
+  <title>Twika | Snake Game</title>
   <meta charset="UTF-8">
   <style>
   html, body {
@@ -50,6 +50,8 @@
   <canvas width="400" height="400" id="game"></canvas>
   <div id="gameOverMessage">Game Over!</div>
   <button id="tryAgainButton" onclick="startGame()">Try Again</button>
+  <button id="fullscreen-button">Enter Full Screen</button>
+
 
   <script>
   var canvas = document.getElementById('game');
@@ -170,6 +172,17 @@
   });
 
   startGame();
+  </script>
+  <script>
+    const fullscreenButton = document.getElementById('fullscreen-button');
+
+    fullscreenButton.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        canvas.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    });
   </script>
 </body>
 </html>
