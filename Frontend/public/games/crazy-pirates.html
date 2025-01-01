@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.6.2/phaser.min.js"></script>
+    <style>
+        body {
+  /* background made with game assets downloaded from kenney.nl */
+  background: url("https://s9.postimg.cc/ocsa695kt/BG-_Web.jpg") no-repeat top
+    center #333;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+canvas {
+  margin: 11% auto 0 auto;
+  border: 10px solid #5e3015;
+}
+
+    </style>
+</head>
+<body>
+    
+    <script>
+        // -------------------------------------
+// Game engine: Phaser CE 2
+// Game title: Calico Jack
+// Version: 1 (Beta)
+// =====================================
+// Game assets created by Kenney
+// Available to download from Kenney.nl
+// =====================================
+
+let CalicoJackGame = {};
+
+// Game Dimensions
+const gameWidth = 960;
+const gameHeight = 680;
+
+// Game boot script
+CalicoJackGame.Boot = function(game) {};
+
+CalicoJackGame.Boot.prototype = {
+  update: function() {
+    // Starts the Preloader section
+    this.state.start("Preloader");
+  }
+};
+
+CalicoJackGame.Preloader = function(game) {
+  // Tell the ready state to be false (not starting the game)
+  this.ready = false;
+};
+
+CalicoJackGame.Preloader.prototype = {
+  preload: function() {
+    this.game.add.text(
+      gameWidth / 2 - 60,
+      game.world.centerY - 20,
+      "Loading...",
+      {
+        fill: "#FFF"
+      }
+    );
+
+    game.load.crossOrigin = "anonymous";
+    // Preloads all the assets used in the game...
+    game.load.image(
+      "water",
+      "https://raw.githubusercontent.com/ChristoSmuts/CalicoJack/master/assets/tile_73.png"
+    );
+    game.load.spritesheet(
+      "player",
+      "https://raw.githubusercontent.com/ChristoSmuts/CalicoJack/master/assets/calico_jack.png",
+      113,
+      66
+    );
+    game.load.spritesheet(
+      "enemy",
+      "https://raw.githubusercontent.com/ChristoSmuts/CalicoJack/master/assets/enemy_ship.png",
+      113,
+      66
+    );
+    game.load.image(
+      "cannonball",
+      "https://raw.githubusercontent.com/ChristoSmuts/CalicoJack/master/assets/cannonBall.png"
+    );
+    game.load.spritesheet(
+      "boom",
+      "https://raw.githubusercontent.com/ChristoSmuts/CalicoJack/master/assets/boomExplode.png",
+      75,
+      75
+    );
+    game.load.script(
+      "webfont",
+      "//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"
+    );
+    game.load.image(
+      "brownBoxTextBg",
+      "https://raw.githubusercontent.com/ChristoSmuts/CalicoJack/master/assets/buttonLong_brown.png"
+    );
+    game.load.spritesheet(
+      "cannonTime",
+      "https://raw.githubusercontent.com/ChristoSmuts/CalicoJack/master/assets/cannonTime.png",
+      55,
+      40
+    );
+    game.load.image(
+      "arrow-left",
+      "https://raw.githubusercontent.com/ChristoSmuts/CalicoJack/master/assets/arrow-left.png"
+    );
+    game.load.image(
+      "arrow-right",
+      "https://raw.githubusercontent.com/ChristoSmuts/CalicoJack/master/assets/arrow-right.png"
+    );
+    game.load.image(
+      "spacebar-image",
+      "https://raw.githubusercontent.com/ChristoSmuts/CalicoJack/master/assets/spacebar-image.png"
+    );
+
+    // Once assets are loaded, run the loadComplete function that sets the ready to true
+    this.load.onLoadComplete.add(this.loadComplete, this);
+  },
+  loadComplete: function() {
+    // Sets the ready to true (start the game)
+    this.ready = true;
+  },
+  update: function() {
+    if (this.ready === true) {
+      // before launching the first Scene (StartScreen) load google webfont first.
+      // this is so that the fonts are loaded when the text is rendered.
+      const wfconfig = {
+        active: function() {
+          game.state.start("StartScreen");
+        },
+        google: {
+          families: ["Trade Winds"]
+        }
+      };
+      WebFont.load(wfconfig);
+    }
+  }
+};
+
+// The Start Screen section
+CalicoJackGame.StartScreen = function(game) {};
+
+// Variables being used in the Start Screen section
+let startText;
+let startButton;
+let creditText;
+let arrowLeft;
+let arrowRight;
+let directionText;
+let spacebarImage;
+
+CalicoJackGame.StartScreen.prototype = {
+  create: function() {
+    startText = game.add.text(
+      game.world.centerX,
+      game.world.centerY / 2,
+      'Press "Spacebar" to Start'
+    );
+    startText.anchor.setTo(0.5, 0.5);
+    startText.font = "Trade Winds";
+    startText.fontSize = 40;
+    startText.fill = "#FFFFFF";
+
+    arrowLeft = game.add.sprite(
+      game.world.centerX - 50,
+      game.world.centerY,
+      "arrow-left"
+    );
+    arrowLeft.anchor.setTo(0.5, 0.5);
+
+    arrowRight = game.add.sprite(
+      game.world.centerX + 50,
+      game.world.centerY,
+      "arrow-right"
+    );
+    arrowRight.anchor.setTo(0.5, 0.5);
+
+    directionText = game.add.text(
+      game.world.centerX,
+      game.world.centerY - 70,
+      "Use keyboard arrows (left and right) to steer the Ship"
+    );
+    directionText.anchor.setTo(0.5, 0.5);
+    directionText.font = "Trade Winds";
+    directionText.fontSize = 24;
+    directionText.fill = "#FFFFFF";
+
+    spacebarImage = game.add.sprite(
+      game.world.centerX,
+      game.world.centerY + 150,
+      "spacebar-image"
+    );
+    spacebarImage.anchor.setTo(0.5, 0.5);
+
+    directionText = game.add.text(
+      game.world.centerX,
+      game.world.centerY + 90,
+      "Use spacebar to fire the Cannons"
+    );
+    directionText.anchor.setTo(0.5, 0.5);
+    directionText.font = "Trade Winds";
+    directionText.fontSize = 24;
+    directionText.fill = "#FFFFFF";
+
+    startButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+    creditText = game.add.text(
+      game.world.centerX,
+      gameHeight - 16,
+      "All game assets downloaded from kenney.nl",
+      {
+        fill: "#FFFFFF",
+        font: "Arial",
+        fontSize: "14px"
+      }
+    );
+    creditText.anchor.setTo(0.5, 0.5);
+  },
+  update: function() {
+    if (startButton.isDown) {
+      // When pressing the spacebar, start the Game section
+      game.state.start("Game");
+    }
+  }
+};
+
+// Game section
+CalicoJackGame.Game = function(game) {};
+
+// Variables being used within the game section.
+let waterBackground;
+let calicoJack;
+let pirateHunters;
+let cannons;
+let cannonTimeImg;
+let enemyCannons;
+let cannonTime = 0;
+let boomEffects;
+let damageText;
+let brownBoxTextBg;
+let damagePercentage = 0;
+let damageTextString = "Hull damage - ";
+let score = 0;
+let scoreString = "Pirate hunters - ";
+let scoreText;
+let firingTimer = 0;
+let livingEnemies = []; // living enemies are pushed into the array at a later stage.
+
+CalicoJackGame.Game.prototype = {
+  create: function() {
+    // Set the physics of the game as well as the world bounds.
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+    game.world.setBounds(0, 0, gameWidth, gameHeight);
+
+    waterBackground = game.add.tileSprite(0, 0, gameWidth, gameHeight, "water");
+
+    brownBoxTextBg = game.add.sprite(gameWidth - 255, 15, "brownBoxTextBg");
+    brownBoxTextBg = game.add.sprite(15, 15, "brownBoxTextBg");
+
+    damageText = game.add.text(
+      gameWidth - 238,
+      30,
+      damageTextString + damagePercentage + "%"
+    );
+    damageText.font = "Trade Winds";
+    damageText.fontSize = 22;
+    damageText.fill = "#FFFFFF";
+
+    scoreText = game.add.text(30, 30, scoreString + score);
+    scoreText.font = "Trade Winds";
+    scoreText.fontSize = 22;
+    scoreText.fill = "#FFFFFF";
+
+    // Calico Jack's Ship (Player)
+    calicoJack = game.add.sprite(game.world.centerX, gameHeight - 60, "player");
+    calicoJack.anchor.setTo(0.5, 0.5);
+    game.physics.arcade.enable(calicoJack);
+    calicoJack.health = 5;
+    calicoJack.body.collideWorldBounds = true;
+
+    // Image that shows after cannon is shot how long before next shot can be taken.
+    cannonTimeImg = game.add.sprite(15, gameHeight - 55, "cannonTime", 3);
+
+    // Cannons for Calico Jack
+    cannons = game.add.group();
+    cannons.enableBody = true;
+    cannons.physicsBodyType = Phaser.Physics.ARCADE;
+    cannons.createMultiple(30, "cannonball");
+    cannons.setAll("anchor.x", 0.5);
+    cannons.setAll("anchor.y", 5);
+    cannons.setAll("outOfBoundsKill", true);
+    cannons.setAll("checkWorldBounds", true);
+
+    // The enemy's cannon balls
+    enemyCannons = game.add.group();
+    enemyCannons.enableBody = true;
+    enemyCannons.physicsBodyType = Phaser.Physics.ARCADE;
+    enemyCannons.createMultiple(30, "cannonball");
+    enemyCannons.setAll("anchor.x", -3);
+    enemyCannons.setAll("anchor.y", -7);
+    enemyCannons.setAll("outOfBoundsKill", true);
+    enemyCannons.setAll("checkWorldBounds", true);
+
+    // Pirate Hunter's Ships (Enemy)
+    createPirateHunters();
+
+    //  An explosion effect
+    boomEffects = game.add.group();
+    boomEffects.createMultiple(30, "boom");
+    boomEffects.forEach(setupPirateHunter, this);
+
+    // Creating the movement and cannon fire action
+    cursors = game.input.keyboard.createCursorKeys();
+    fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+  },
+  update: function() {
+    // Water Effect (moves the tile continually to create effect)
+    waterBackground.tilePosition.x += 0.5;
+    waterBackground.tilePosition.y += 0.5;
+
+    // Check the position of each enemy ship
+    // (turns them around once they reach the edge of the world)
+    pirateHunters.forEach(checkPos, this);
+
+    scoreText.setText(scoreString + score);
+
+    // Script that moves the ship when user presses the left/right arrow keys
+    if (calicoJack.alive) {
+      calicoJack.body.velocity.setTo(0, 0);
+      if (cursors.left.isDown) {
+        calicoJack.body.velocity.x = -200;
+        calicoJack.angle = 0;
+      } else if (cursors.right.isDown) {
+        calicoJack.body.velocity.x = 200;
+        // Turns the ship image around to emulate moving into different direction
+        calicoJack.angle = 180;
+      }
+
+      // If spacebar (fireButton) is pressed, fire the cannon
+      if (fireButton.isDown) {
+        fireCannon();
+      }
+
+      // Launches the function that creates the enemy fire (randomly from each enemy)
+      if (game.time.now > firingTimer) {
+        enemyFiresCannons();
+      }
+
+      game.physics.arcade.overlap(
+        cannons,
+        pirateHunters,
+        hitPirateHunters,
+        null,
+        this
+      );
+      game.physics.arcade.overlap(
+        enemyCannons,
+        calicoJack,
+        enemyHitsJack,
+        null,
+        this
+      );
+    }
+  }
+};
+
+function setupPirateHunter(ship) {
+  ship.anchor.x = 0.5;
+  ship.anchor.y = 0.5;
+  ship.animations.add("boom");
+}
+
+// Function that creates the enemy ships and gives them all the attributes needed for the game
+// health, speed, collision, etc.
+function createPirateHunters() {
+  pirateHunters = game.add.physicsGroup();
+
+  let y = 130;
+
+  for (let i = 0; i < 4; i++) {
+    const pirateHunter = pirateHunters.create(game.world.randomX, y, "enemy");
+    pirateHunter.anchor.setTo(0.5, 0.5);
+    game.physics.arcade.enable(pirateHunter);
+    pirateHunter.body.collideWorldBounds = true;
+    pirateHunter.body.velocity.x = game.rnd.between(80, 200);
+    pirateHunter.angle = 180;
+    pirateHunter.health = 3;
+    y += 75;
+  }
+}
+
+function enemyFiresCannons() {
+  //  Grab the first cannon we can from the group
+  enemyCannonBall = enemyCannons.getFirstExists(false);
+  livingEnemies.length = 0;
+
+  pirateHunters.forEachAlive(function(pirateHunter) {
+    // put every living enemy in an array
+    livingEnemies.push(pirateHunter);
+    // equals the score variable to the amount of enemies
+    score = livingEnemies.length;
+  });
+
+  if (enemyCannonBall && livingEnemies.length > 0) {
+    let random = game.rnd.integerInRange(0, livingEnemies.length - 1);
+    // randomly select one of them
+    let shooter = livingEnemies[random];
+    // And fire the cannon from this enemy
+    enemyCannonBall.reset(shooter.body.x, shooter.body.y);
+    // makes the cannon ball move into the direction of the player
+    game.physics.arcade.moveToObject(enemyCannonBall, calicoJack, 120);
+    firingTimer = game.time.now + 2000;
+  }
+}
+
+function checkPos(pirateHunter) {
+  // Check if the enemy ships reach the edges of the world
+  // then turn them around at a different speed
+  // looping through
+  if (pirateHunter.x > gameWidth - 65) {
+    pirateHunter.body.velocity.x = game.rnd.between(-80, -200);
+    pirateHunter.angle = 0;
+  } else if (pirateHunter.x < 65) {
+    pirateHunter.body.velocity.x = game.rnd.between(80, 200);
+    pirateHunter.angle = 180;
+  }
+}
+
+function fireCannon() {
+  //  To avoid them being allowed to fire too fast we set a time limit
+  if (game.time.now > cannonTime) {
+    //  Grab the first cannon ball we can from the group
+    cannon = cannons.getFirstExists(false);
+
+    if (cannon) {
+      //  And fire it
+      cannon.reset(calicoJack.x, calicoJack.y + 8);
+      cannon.body.velocity.y = -400;
+      cannonTime = game.time.now + 1500;
+      cannonTimeImg.animations.add("cannonTime");
+      cannonTimeImg.animations.play("cannonTime", 2.4, false);
+    }
+  }
+}
+
+function hitPirateHunters(cannonball, pirateHunter) {
+  cannonball.kill();
+  // each time the player hits an enemy with a cannon, do 1 damage (enemy has a health of 3)
+  pirateHunter.damage(1);
+
+  if (pirateHunter.health == 2) {
+    // Change the image of the enemy ship (to a more damaged looking ship)
+    pirateHunter.frame = 1;
+  } else if (pirateHunter.health == 1) {
+    // Change the image of the enemy ship (to a more damaged looking ship)
+    pirateHunter.frame = 2;
+  } else {
+    //  Decrease the number of ships left
+    score--;
+    scoreText.text = scoreString + score;
+    if (score === 0) {
+      // once all the enemy ships are destroyed, the player wins
+      // start the Win State section
+      damagePercentage = 0;
+      game.state.start("WinState");
+    }
+  }
+
+  //  And create an explosion :)
+  const boomEffect = boomEffects.getFirstExists(false);
+  boomEffect.reset(pirateHunter.body.x + 50, pirateHunter.body.y + 30);
+  boomEffect.play("boom", 10, false, true);
+}
+
+function enemyHitsJack(calicoJack, cannonball) {
+  cannonball.kill();
+  // each time the enemy hits the player, do 1 damage to the player's health
+  calicoJack.damage(1);
+
+  //  Increase the Damage Taken (1 hit counts for 20% damage)
+  damagePercentage += 20;
+  damageText.text = damageTextString + damagePercentage + "%";
+
+  if (calicoJack.health == 3) {
+    // Change the image frame of the player's ship as it gets hit
+    calicoJack.frame = 1;
+  } else if (calicoJack.health == 1) {
+    // Change the image frame of the player's ship as it gets hit
+    calicoJack.frame = 2;
+  } else if (calicoJack.health == 0) {
+    // once the player was hit 5 times = 100% damage.
+    // Kill player, and Start Game Over state
+    enemyCannons.callAll("kill");
+    damagePercentage = 0;
+    game.state.start("GameOver");
+  }
+
+  //  And create an explosion :)
+  const boomEffect = boomEffects.getFirstExists(false);
+  boomEffect.reset(calicoJack.body.x + 50, calicoJack.body.y + 30);
+  boomEffect.play("boom", 10, false, true);
+}
+
+// Game Over section
+CalicoJackGame.GameOver = function(game) {};
+
+// Variables used within the game over section
+let gameOverText;
+let gameOverTextStartAgain;
+
+CalicoJackGame.GameOver.prototype = {
+  create: function() {
+    gameOverText = game.add.text(
+      game.world.centerX,
+      game.world.centerY - 40,
+      "Game Over"
+    );
+    gameOverText.anchor.setTo(0.5, 0.5);
+    gameOverText.font = "Trade Winds";
+    gameOverText.fontSize = 48;
+    gameOverText.fill = "#FFFFFF";
+
+    gameOverTextStartAgain = game.add.text(
+      game.world.centerX,
+      game.world.centerY + 40,
+      "Press Spacebar to try again"
+    );
+    gameOverTextStartAgain.anchor.setTo(0.5, 0.5);
+    gameOverTextStartAgain.font = "Trade Winds";
+    gameOverTextStartAgain.fontSize = 28;
+    gameOverTextStartAgain.fill = "#FFFFFF";
+
+    creditText = game.add.text(
+      game.world.centerX,
+      gameHeight - 16,
+      "All game assets downloaded from kenney.nl",
+      {
+        fill: "#FFFFFF",
+        font: "Arial",
+        fontSize: "14px"
+      }
+    );
+    creditText.anchor.setTo(0.5, 0.5);
+
+    startButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+  },
+  update: function() {
+    if (startButton.isDown) {
+      // Once the user presses the spacebar, the game resets and
+      // starts again at the game section
+      game.state.start("Game");
+    }
+  }
+};
+
+// Win state section
+CalicoJackGame.WinState = function(game) {};
+
+// Variables used within the win state section
+let winStateText;
+let winStateTextStartAgain;
+
+CalicoJackGame.WinState.prototype = {
+  create: function() {
+    winStateText = game.add.text(
+      game.world.centerX,
+      game.world.centerY - 40,
+      "You Won!"
+    );
+    winStateText.anchor.setTo(0.5, 0.5);
+    winStateText.font = "Trade Winds";
+    winStateText.fontSize = 48;
+    winStateText.fill = "#FFFFFF";
+
+    winStateTextStartAgain = game.add.text(
+      game.world.centerX,
+      game.world.centerY + 40,
+      "Press Spacebar to try again"
+    );
+    winStateTextStartAgain.anchor.setTo(0.5, 0.5);
+    winStateTextStartAgain.font = "Trade Winds";
+    winStateTextStartAgain.fontSize = 28;
+    winStateTextStartAgain.fill = "#FFFFFF";
+
+    creditText = game.add.text(
+      game.world.centerX,
+      gameHeight - 16,
+      "All game assets downloaded from kenney.nl",
+      {
+        fill: "#FFFFFF",
+        font: "Arial",
+        fontSize: "14px"
+      }
+    );
+    creditText.anchor.setTo(0.5, 0.5);
+
+    startButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+  },
+  update: function() {
+    if (startButton.isDown) {
+      // Once the user presses the spacebar, the game resets and
+      // starts again at the game section
+      game.state.start("Game");
+    }
+  }
+};
+
+// Variable that holds the main game config settings.
+const game = new Phaser.Game(gameWidth, gameHeight, Phaser.AUTO);
+
+// Add all the "sections" aka states to the game.
+game.state.add("Boot", CalicoJackGame.Boot);
+game.state.add("Preloader", CalicoJackGame.Preloader);
+game.state.add("StartScreen", CalicoJackGame.StartScreen);
+game.state.add("Game", CalicoJackGame.Game);
+game.state.add("GameOver", CalicoJackGame.GameOver);
+game.state.add("WinState", CalicoJackGame.WinState);
+
+// Launch the Boot state when file is fully loaded.
+game.state.start("Boot");
+
+    </script>
+</body>
+</html>

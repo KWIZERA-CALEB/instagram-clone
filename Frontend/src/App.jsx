@@ -8,6 +8,9 @@ import { useAuthStore } from './store/useAuthStore'
 import { useEffect } from 'react'
 import ProtectedRoute from './components/atoms/ProtectedRoute'
 import AuthProtectedRoute from './components/atoms/AuthProtectedRoute'
+import DoodleJump from './components/DoodleJump'
+import Sokoban from './components/Sokoban'
+import Tetris from './components/Tetris'
 
 const App = () => {
   const { checkAuth } = useAuthStore()
@@ -19,6 +22,17 @@ const App = () => {
   return (
     <>
       <Routes>
+        <Route path='/doodle-jump' element={
+            <DoodleJump />
+        } />
+        <Route path='/sokoban' element={
+            <Sokoban />
+        } />
+        <Route path='/tetris' element={
+            <Tetris />
+        } />
+
+
         <Route path='/' element={
             <HomePage />
         } />

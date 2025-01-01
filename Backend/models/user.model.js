@@ -23,7 +23,7 @@ const userSchema = new Schema({
     },
     profileImage: {
         type: String,
-        default: 'http://localhost:5173/images/avatar.jpg'
+        default: 'https://twikaapp.netlify.app/images/avatar.jpg'
     },
 }, {timestamps: true})
 
