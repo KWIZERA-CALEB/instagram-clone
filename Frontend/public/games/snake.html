@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Basic Snake HTML Game</title>
+  <meta charset="UTF-8">
+  <style>
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+
+  body {
+    background: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  canvas {
+    border: 1px solid white;
+  }
+
+  #gameOverMessage {
+    color: white;
+    font-size: 24px;
+    margin-top: 20px;
+    display: none;
+  }
+
+  #tryAgainButton {
+    padding: 10px 20px;
+    background-color: green;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: none;
+  }
+
+  #score {
+    color: white;
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  </style>
+</head>
+<body>
+  <div id="score">Score: 0</div>
+  <canvas width="400" height="400" id="game"></canvas>
+  <div id="gameOverMessage">Game Over!</div>
+  <button id="tryAgainButton" onclick="startGame()">Try Again</button>
+
+  <script>
+  var canvas = document.getElementById('game');
+  var context = canvas.getContext('2d');
+  var scoreElement = document.getElementById('score');
+  var gameOverMessage = document.getElementById('gameOverMessage');
+  var tryAgainButton = document.getElementById('tryAgainButton');
+  
+  var grid = 16;
+  var count = 0;
+  var gameInterval;
+
+  var snake = {
+    x: 160,
+    y: 160,
+    dx: grid,
+    dy: 0,
+    cells: [],
+    maxCells: 4
+  };
+
+  var apple = {
+    x: 320,
+    y: 320
+  };
+
+  var score = 0;
+
+  function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+
+  function gameOver() {
+    clearInterval(gameInterval);  // Stop the game loop
+    gameOverMessage.style.display = 'block';
+    tryAgainButton.style.display = 'inline-block';
+  }
+
+  function startGame() {
+    // Reset game state
+    snake = {
+      x: 160,
+      y: 160,
+      dx: grid,
+      dy: 0,
+      cells: [],
+      maxCells: 4
+    };
+    apple = {
+      x: getRandomInt(0, 25) * grid,
+      y: getRandomInt(0, 25) * grid
+    };
+    score = 0;
+    scoreElement.textContent = 'Score: ' + score;
+    gameOverMessage.style.display = 'none';
+    tryAgainButton.style.display = 'none';
+
+    // Start the game loop
+    count = 0;
+    gameInterval = setInterval(loop, 1000 / 15);  // Set to 15 fps
+  }
+
+  function loop() {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    snake.x += snake.dx;
+    snake.y += snake.dy;
+
+    if (snake.x < 0 || snake.x >= canvas.width || snake.y < 0 || snake.y >= canvas.height) {
+      gameOver();
+      return;
+    }
+
+    snake.cells.unshift({x: snake.x, y: snake.y});
+    if (snake.cells.length > snake.maxCells) {
+      snake.cells.pop();
+    }
+
+    context.fillStyle = 'red';
+    context.fillRect(apple.x, apple.y, grid - 1, grid - 1);
+
+    context.fillStyle = 'green';
+    snake.cells.forEach(function(cell, index) {
+      context.fillRect(cell.x, cell.y, grid - 1, grid - 1);
+
+      if (cell.x === apple.x && cell.y === apple.y) {
+        snake.maxCells++;
+        score++;
+        scoreElement.textContent = 'Score: ' + score;
+
+        apple.x = getRandomInt(0, 25) * grid;
+        apple.y = getRandomInt(0, 25) * grid;
+      }
+
+      for (var i = index + 1; i < snake.cells.length; i++) {
+        if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+          gameOver();
+          return;
+        }
+      }
+    });
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.which === 37 && snake.dx === 0) {
+      snake.dx = -grid;
+      snake.dy = 0;
+    } else if (e.which === 38 && snake.dy === 0) {
+      snake.dy = -grid;
+      snake.dx = 0;
+    } else if (e.which === 39 && snake.dx === 0) {
+      snake.dx = grid;
+      snake.dy = 0;
+    } else if (e.which === 40 && snake.dy === 0) {
+      snake.dy = grid;
+      snake.dx = 0;
+    }
+  });
+
+  startGame();
+  </script>
+</body>
+</html>

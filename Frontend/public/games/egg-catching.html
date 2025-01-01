@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Egg Catching Game</title>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            font-family: sans-serif;
+        }
+
+        #container {
+            height: 90%;
+            width: 90%;
+            margin-left: 5%;
+            position: relative;
+            border: 1px solid red;
+            overflow: hidden;
+            background-color: #31b6ce;
+        }
+
+        #score_help {
+            text-align: center;
+            font-size: 25px;
+            background-color: #eaeaea;
+        }
+
+        #branch {
+            position: absolute;
+            height: 2%;
+            width: 100%;
+            background-color: #7b2e00;
+            top: 23%;
+        }
+
+        .hen {
+            position: absolute;
+            height: 15%;
+            width: 8%;
+            top: 10%;
+            background: url("https://raw.githubusercontent.com/arshadasgar/arshadasgar.github.io/master/eggs/hen-right.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+            z-index: 100;
+        }
+
+        #hen1 {
+            left: 20%;
+        }
+
+        #hen2 {
+            left: 40%;
+        }
+
+        #hen3 {
+            left: 60%;
+        }
+
+        .egg {
+            position: absolute;
+            top: 18%;
+            height: 5%;
+            width: 2%;
+            background-color: #fff;
+            border-radius: 50%;
+            z-index: 99;
+        }
+
+        #egg1 {
+            left: calc(20% + 8%/2 - 2%/2);
+        }
+
+        #egg2 {
+            left: calc(40% + 8%/2 - 2%/2);
+        }
+
+        #egg3 {
+            left: calc(60% + 8%/2 - 2%/2);
+        }
+
+        .bullseye {
+            display: none;
+            position: absolute;
+            bottom: 0px;
+            height: 7%;
+            width: 7%;
+            background: url("https://raw.githubusercontent.com/arshadasgar/arshadasgar.github.io/master/eggs/bullseye1.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+            z-index: 11;
+        }
+
+        #bullseye1 {
+            left: calc(20% + 8%/2 - 7%/2);
+        }
+
+        #bullseye2 {
+            left: calc(40% + 8%/2 - 7%/2);
+        }
+
+        #bullseye3 {
+            left: calc(60% + 8%/2 - 7%/2);
+        }
+
+        #floor {
+            position: absolute;
+            height: 7%;
+            width: 100%;
+            background-color: #292929;
+            bottom: 0;
+            z-index: 10;
+        }
+
+        #basket {
+            height: 100px;
+            width: 85px;
+            position: absolute;
+            bottom: 5px;
+            background: url("https://raw.githubusercontent.com/arshadasgar/arshadasgar.github.io/master/eggs/basket.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+            text-align: center;
+            z-index: 11;
+        }
+
+        #score_1 {
+            position: absolute;
+            color: #424242;
+            font-size: 30px;
+            top: 45%;
+            left: 30%;
+        }
+
+        #restart {
+            border: 0;
+            position: absolute;
+            height: 10%;
+            width: 100%;
+            background-color: fuchsia;
+            color: white;
+            top: 40%;
+            font-size: 35px;
+            display: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="score_help"> Score: <span id="score">0</span> | Life: <span id="life">5</span> | Use mouse to control</div>
+        <div id="branch"></div>
+        <div id="hen1" class="hen"></div>
+        <div id="hen2" class="hen"></div>
+        <div id="hen3" class="hen"></div>
+        <div id="egg1" class="egg" data-bullseye="1"></div>
+        <div id="egg2" class="egg" data-bullseye="2"></div>
+        <div id="egg3" class="egg" data-bullseye="3"></div>
+        <div id="bullseye1" class="bullseye"></div>
+        <div id="bullseye2" class="bullseye"></div>
+        <div id="bullseye3" class="bullseye"></div>
+        <div id="basket">
+            <span id="score_1"></span>
+        </div>
+        <div id="floor"></div>
+        <button id="restart">Restart</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        var basket = $("#basket"),
+            container = $("#container"),
+            hen = $(".hen"),
+            eggs = $(".egg"),
+            egg1 = $("#egg1"),
+            egg2 = $("#egg2"),
+            egg3 = $("#egg3"),
+            restart = $("#restart"),
+            score_span = $("#score"),
+            score_1 = $("#score_1"),
+            life_span = $("#life"),
+            floor = $("#floor"),
+            basket_height = basket.height(),
+            container_height = container.height(),
+            egg_height = eggs.height(),
+            egg_initial_position = parseInt(eggs.css("top")),
+            score = 0,
+            life = 5,
+            speed = 2,
+            max_speed = 15,
+            anim_id = 0,
+            egg_top = 0,
+            basket_top = container_height - basket_height,
+            bullseye_num = 0;
+
+        life_span.text(life);
+
+        $(function() {
+            function gameLoop() {
+                // Check if eggs hit floor or basket
+                handleEggs(egg1);
+                handleEggs(egg2);
+                handleEggs(egg3);
+
+                if (life > 0) {
+                    anim_id = requestAnimationFrame(gameLoop);
+                } else {
+                    stopGame();
+                }
+            }
+
+            anim_id = requestAnimationFrame(gameLoop);
+        });
+
+        $(document).on("mousemove", function(e) {
+            basket.css("left", e.pageX);
+        });
+
+        function handleEggs(egg) {
+            if (checkEggHitsFloor(egg) || checkEggHitsBasket(egg)) {
+                setEggToInitialPosition(egg);
+            } else {
+                eggDown(egg);
+            }
+        }
+
+        function eggDown(egg) {
+            var eggCurrentPosition = parseInt(egg.css("top"));
+            egg.css("top", eggCurrentPosition + speed);
+        }
+
+        function checkEggHitsFloor(egg) {
+            if (collision(egg, floor)) {
+                showBullseye(egg);
+                decrementLife();
+                return true;
+            }
+            return false;
+        }
+
+        function checkEggHitsBasket(egg) {
+            if (collision(egg, basket)) {
+                var eggTop = parseInt(egg.css("top"));
+                if (eggTop < basket_top) {
+                    updateScore();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function showBullseye(egg) {
+            bullseye_num = egg.attr("data-bullseye");
+            $("#bullseye" + bullseye_num).show();
+            hideBullseye(bullseye_num);
+        }
+
+        function hideBullseye(bullseye_num) {
+            setTimeout(function() {
+                $("#bullseye" + bullseye_num).hide();
+            }, 800);
+        }
+
+        function updateScore() {
+            score++;
+            if (score % 10 === 0 && speed <= max_speed) {
+                speed++;
+            }
+            score_span.text(score);
+            score_1.text(score);
+        }
+
+        function decrementLife() {
+            life--;
+            life_span.text(life);
+        }
+
+        function setEggToInitialPosition(egg) {
+            egg.css("top", egg_initial_position);
+        }
+
+        function stopGame() {
+            cancelAnimationFrame(anim_id);
+            restart.slideDown();
+        }
+
+        restart.click(function() {
+            location.reload();
+        });
+
+        function collision($div1, $div2) {
+            var x1 = $div1.offset().left;
+            var y1 = $div1.offset().top;
+            var h1 = $div1.outerHeight(true);
+            var w1 = $div1.outerWidth(true);
+            var b1 = y1 + h1;
+            var r1 = x1 + w1;
+            var x2 = $div2.offset().left;
+            var y2 = $div2.offset().top;
+            var h2 = $div2.outerHeight(true);
+            var w2 = $div2.outerWidth(true);
+            var b2 = y2 + h2;
+            var r2 = x2 + w2;
+
+            return !(b1 < y2 || y1 > b2 || r1 < x2 || x1 > r2);
+        }
+    </script>
+</body>
+</html>

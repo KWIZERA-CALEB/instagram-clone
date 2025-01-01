@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Basic Doodle Jump HTML Game</title>
+  <meta charset="UTF-8">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    canvas {
+      border: 1px solid black;
+    }
+
+    .game-over {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .game-over.active {
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+<div id="controls">
+  <button id="fullscreen-button">Enter Full Screen</button>
+</div>
+<canvas width="375" height="667" id="game"></canvas>
+<div class="game-over" id="game-over">
+  <h1>Game Over!</h1>
+  <p>Your score: <span id="final-score">0</span></p>
+  <button id="restart-button">Try Again</button>
+</div>
+<script>
+const canvas = document.getElementById('game');
+const context = canvas.getContext('2d');
+const gameOverScreen = document.getElementById('game-over');
+const finalScoreElement = document.getElementById('final-score');
+const restartButton = document.getElementById('restart-button');
+const fullscreenButton = document.getElementById('fullscreen-button');
+
+// Existing game variables
+const platformWidth = 65;
+const platformHeight = 20;
+const platformStart = canvas.height - 50;
+const gravity = 0.33;
+const drag = 0.3;
+const bounceVelocity = -12.5;
+
+let minPlatformSpace = 15;
+let maxPlatformSpace = 20;
+let platforms = [];
+let doodle;
+let playerDir = 0;
+let keydown = false;
+let prevDoodleY = 0;
+let isGameOver = false;
+let score = 0;
+
+// Initialize the game
+function initGame() {
+  // Reset variables
+  platforms = [{
+    x: canvas.width / 2 - platformWidth / 2,
+    y: platformStart
+  }];
+  doodle = {
+    width: 40,
+    height: 60,
+    x: canvas.width / 2 - 20,
+    y: platformStart - 60,
+    dx: 0,
+    dy: 0
+  };
+  playerDir = 0;
+  keydown = false;
+  prevDoodleY = doodle.y;
+  isGameOver = false;
+  score = 0;
+
+  // Hide game over screen
+  gameOverScreen.classList.remove('active');
+  canvas.style.display = 'block';
+
+  // Fill initial screen with platforms
+  let y = platformStart;
+  while (y > 0) {
+    y -= platformHeight + random(minPlatformSpace, maxPlatformSpace);
+    platforms.push({
+      x: random(25, canvas.width - 25 - platformWidth),
+      y: y
+    });
+  }
+
+  // Start game loop
+  requestAnimationFrame(loop);
+}
+
+// Get a random number between min and max
+function random(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+// Game loop
+function loop() {
+  if (isGameOver) return;
+
+  requestAnimationFrame(loop);
+  context.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Apply gravity to doodle
+  doodle.dy += gravity;
+
+  // If doodle reaches the middle of the screen, move platforms down
+  if (doodle.y < canvas.height / 2 && doodle.dy < 0) {
+    platforms.forEach(platform => {
+      platform.y += -doodle.dy;
+    });
+
+    // Add more platforms to the top
+    while (platforms[platforms.length - 1].y > 0) {
+      platforms.push({
+        x: random(25, canvas.width - 25 - platformWidth),
+        y: platforms[platforms.length - 1].y - (platformHeight + random(minPlatformSpace, maxPlatformSpace))
+      });
+    }
+
+    // Increment score
+    score++;
+  } else {
+    doodle.y += doodle.dy;
+  }
+
+  // Apply drag to horizontal movement
+  if (!keydown) {
+    if (playerDir < 0) {
+      doodle.dx += drag;
+      if (doodle.dx > 0) doodle.dx = 0;
+    } else if (playerDir > 0) {
+      doodle.dx -= drag;
+      if (doodle.dx < 0) doodle.dx = 0;
+    }
+  }
+
+  // Move doodle horizontally
+  doodle.x += doodle.dx;
+
+  // Wrap around horizontally
+  if (doodle.x + doodle.width < 0) {
+    doodle.x = canvas.width;
+  } else if (doodle.x > canvas.width) {
+    doodle.x = -doodle.width;
+  }
+
+  // Draw platforms
+  context.fillStyle = 'green';
+  platforms.forEach(platform => {
+    context.fillRect(platform.x, platform.y, platformWidth, platformHeight);
+
+    // Collision detection
+    if (
+      doodle.dy > 0 &&
+      prevDoodleY + doodle.height <= platform.y &&
+      doodle.x < platform.x + platformWidth &&
+      doodle.x + doodle.width > platform.x &&
+      doodle.y < platform.y + platformHeight &&
+      doodle.y + doodle.height > platform.y
+    ) {
+      doodle.y = platform.y - doodle.height;
+      doodle.dy = bounceVelocity;
+    }
+  });
+
+  // Draw doodle
+  context.fillStyle = 'yellow';
+  context.fillRect(doodle.x, doodle.y, doodle.width, doodle.height);
+
+  // Update previous doodle position
+  prevDoodleY = doodle.y;
+
+  // Remove platforms that go offscreen
+  platforms = platforms.filter(platform => platform.y < canvas.height);
+
+  // Draw score
+  context.fillStyle = 'black';
+  context.font = '16px Arial';
+  context.fillText(`Score: ${score}`, 10, 20);
+
+  // Check for game over
+  if (doodle.y > canvas.height) {
+    endGame();
+  }
+}
+
+// End the game
+function endGame() {
+  isGameOver = true;
+  canvas.style.display = 'none';
+  gameOverScreen.classList.add('active');
+  finalScoreElement.textContent = score;
+}
+
+// Full-screen functionality
+fullscreenButton.addEventListener('click', () => {
+  if (!document.fullscreenElement) {
+    canvas.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+});
+
+// Restart button
+restartButton.addEventListener('click', initGame);
+
+// Keyboard controls
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft') {
+    playerDir = -1;
+    doodle.dx = -3;
+    keydown = true;
+  } else if (e.key === 'ArrowRight') {
+    playerDir = 1;
+    doodle.dx = 3;
+    keydown = true;
+  }
+});
+
+document.addEventListener('keyup', () => {
+  keydown = false;
+});
+
+// Start the game
+initGame();
+</script>
+</body>
+</html>

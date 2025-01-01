@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body {
+  margin: 0;
+  background-color: #B1E8E8;
+ overflow-x: hidden;
+}
+.container {
+  width: 90%;
+  min-width: 760px;
+  height: 400px;
+  border-top: 18px solid rgba(0,0,0,0.1);
+  border-bottom: 18px solid rgba(0,0,0,0.1);
+  border-right: 12px solid rgba(0,0,0,0.1);
+  border-left: 12px solid rgba(0,0,0,0.1);
+  margin: 20px auto;
+  position: relative;
+  background-color: #739797;
+  overflow: hidden;
+}
+
+
+.cloud1{
+  position: absolute;
+  right: -1000px;
+  top: 75px;
+}
+
+.cloud2{
+  position: absolute;
+  right: -1300px;
+  top: 35px;
+}
+
+.bird{
+  position: absolute;
+  top: 100px;
+  left: 200px;
+}
+
+.pole {
+  width: 50px;
+  height: 125px;
+  background-color: #559751;
+  position: absolute;
+  right: 100px;
+}
+
+.up{
+  top: 0;
+  box-shadow: -1px 2px 5px 0px rgba(0,0,0,0.8);
+}
+.down {
+  bottom: 0;
+  box-shadow: -1px -1px 5px 0px rgba(0,0,0,0.8);
+}
+
+
+/* START button  */
+
+#start {
+  color: #4A362A;
+  font-size: 40px;
+  font-weight: bold;
+  margin: 100px auto;
+  width: 265px;
+  padding: 0px;
+  cursor : pointer;
+}
+#start:hover {
+  color: #7A665A
+}
+#start h1{
+  padding: 0;
+  margin: 0;
+}
+
+/* SCORE BOARD */
+#score, #speed{
+  font-size: 30px;
+  margin: 0 auto;
+  margin-top: 30px;
+  text-align: center;
+  width: 200px;
+  padding: 5px;
+}
+
+/*  restart button  */
+#restart{
+  width: 100%;
+  font-size: 40px;
+  text-align: center;
+  padding: 10px;
+  background-color: #559751;
+  display: none;
+  position: absolute;
+  top: 0;
+  cursor : pointer;
+}
+#restart:hover {
+  background-color: #75b771;
+}
+
+/* Branding */
+.branding {
+  text-align: right;
+  font-size: 22px;
+  color: red;
+  margin-top: 10px;
+}
+
+/* media queries */
+
+@media (max-width:790px) {
+  #score, #speed {
+    float: left;
+  }
+  #speed {
+    margin-left: 150px;
+  }
+  .value {
+    width: 60%;
+    margin: 0 auto;
+  }
+}
+
+    </style>
+</head>
+<body>
+    
+<div class="container">
+    <img class="cloud1" src="https://image.ibb.co/chDiRQ/cloud1.png" width="180px">
+    <img class="cloud2" src="https://image.ibb.co/chDiRQ/cloud1.png" width="180px">
+    <img class="bird" src="https://image.ibb.co/nqjUVk/bird.png" width="80px">
+
+    <div class="up pole"></div>
+    <div class="down pole"></div>
+
+    <div id="start"><h1>START</h1></div>
+  </div>
+
+  <div id="restart">
+    RESTART
+  </div>
+
+
+  <div class="value">
+    <div id="score">Score is : <span>0</span></div>
+    <div id="speed">Speed is : <span>10</span></div>
+  </div>
+
+
+  <script>
+    $(document).ready(function() {
+
+/* making objects from the DOM */
+ var container = $(".container");
+ var bird = $(".bird");
+ var pole = $(".pole");
+ var pole_up = $(".up.pole");
+ var pole_down = $(".down.pole");
+ var score_val = $("#score span");
+ var speed_val = $("#speed span");
+ var cloud1 = $(".cloud1");
+ var cloud2 = $(".cloud2");
+
+/* variables with initial values */
+ var container_width = parseInt(container.width());
+ var container_height = parseInt(container.height());
+ var pole_initial_position = parseInt(pole.css('right'));
+ var pole_initial_height = parseInt(pole.css('height'));
+ var speed_initial = 10;
+ var score_initial = 0;
+ var bird_initial_position = parseInt(bird.css('top'));
+
+ /* game logic */
+ $(document).on('click' , '#start' , function() {
+
+    /* vanishing start button on click */
+    $('#start').hide();
+
+    /* Tells how to play */
+    alert("Press UP to play");
+
+
+     var pole_position = pole_initial_position;
+     var speed = speed_initial;
+     var score = score_initial;
+     var bird_position = bird_initial_position;
+
+     var key_up = false;
+
+
+
+     var the_game = setInterval(function () {
+       if( collision(bird,pole_up) || collision(bird,pole_down)) {
+             stop_the_game();
+
+       } else {
+              /* poles moving */
+             pole_position = parseInt(pole.css('right'));
+
+             if (pole_position > container_width) {
+
+                var pole_up_height = (Math.floor(Math.random()*260+1));    /*changing the heights of poles */
+                var pole_down_height = 400-pole_up_height-150;
+                pole_up.css('height',pole_up_height);
+                pole_down.css('height',pole_down_height);
+
+
+                pole_position = pole_initial_position-150;
+                speed+=1;               /* increment speed by 1 */
+                speed_val.html(speed);
+                score+=25;              /* increment score by 5 */
+                score_val.html(score);
+
+             }
+
+            pole.css('right',pole_position + speed);
+
+
+          /*  bird moving down until a up key is pressed  */
+            if (key_up===false && parseInt(bird.css('top'))<350) {      /* do not let go out of container */
+               bird.css('top',parseInt(bird.css('top'))+6);
+
+            }
+
+
+            /* cloud1 moving */
+            if(parseInt(cloud1.css('right'))>container_width)
+              {
+                cloud1.css('right',-3200);
+                cloud1.css('top', 20 + (Math.floor(Math.random()*290+1)));
+              }
+            cloud1.css('right',parseInt(cloud1.css('right'))+speed);
+
+            cloud1.css('top',parseInt(cloud1.css('top')));
+
+            /* cloud2 moving  */
+            if(parseInt(cloud2.css('right'))>container_width)
+              {
+                cloud2.css('right',-3200 - (Math.floor(Math.random()*300+1)));
+                cloud2.css('top', 20 + (Math.floor(Math.random()*290+1)));
+              }
+            cloud2.css('right',parseInt(cloud2.css('right'))+speed);
+
+            cloud2.css('top',parseInt(cloud2.css('top')));
+
+
+
+
+
+        }
+
+
+     },40);
+
+     /* on pressing up key the bird moves up by 40 px*/
+     $(document).on('keydown',function(e){
+         if(e.which==38 && the_game!=null ){     /* checking for up key press and whether the_game is running or not */
+             key_up=true;
+             if ( parseInt(bird.css('top'))>-10)    /* do not let go out of container */
+                 bird.animate({top:"-=40"} ,200);
+             key_up=false;
+         }
+
+     });
+    
+
+     /* Function for stopping the game */
+     function stop_the_game(){
+         clearInterval(the_game);
+         the_game = null;      /* making the the_game null */
+
+         /* hiding the poles, clouds, bird after game end */
+         cloud1.css('display','none');
+         cloud2.css('display','none');
+         pole.css('display','none');
+         bird.css('display','none');
+
+         /*Displaying the "GAME OVER" and highlighting the score*/
+         $('#start').html('<h1>GAME OVER</h1>');
+         $('#start').css('font-size','30px');
+         $('#start').show();
+         $('#score').css('background-color',"#F39376");
+         $('#score').css('box-shadow',"0px 0px 5px black");
+
+         /* Displaying the "RESTART BAR" */
+         $('#restart').css('display','block');
+
+
+     }
+
+     /* restarting game after pressing restart */
+
+     $('#restart').click(function() {
+        location.reload(window.location.href);
+       
+     });
+
+
+
+     /* Function checks for collision of bird */
+     function collision($div1, $div2){
+         var x1 = $div1.offset().left;
+         var y1 = $div1.offset().top;
+         var h1 = $div1.outerHeight(true);
+         var w1 = $div1.outerWidth(true);
+         var b1 = y1 + h1;
+         var r1 = x1 + w1;
+         var x2 = $div2.offset().left;
+         var y2 = $div2.offset().top;
+         var h2 = $div2.outerHeight(true);
+         var w2 = $div2.outerWidth(true);
+         var b2 = y2 + h2;
+         var r2 = x2 + w2;
+
+         if (b1 < y2 || y1 > b2 || r1 < x2 || x1 > r2) return false;
+         return true;
+     }
+
+
+  });
+
+});
+
+  </script>
+</body>
+</html>
