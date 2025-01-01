@@ -14,6 +14,7 @@ const Suggestions = () => {
                   <li className='font-afacadFlux font-bold select-none cursor-pointer text-start text-[14px]'>Get free access to hundred of stories.</li>
                   <li className='font-afacadFlux font-bold select-none cursor-pointer text-start text-[14px]'>Enjoy unlimited talk with hundred hommies.</li>
                   <li className='font-afacadFlux font-bold select-none cursor-pointer text-start text-[14px]'>We want to make you happy.</li>
+                  <li className='font-afacadFlux font-bold select-none cursor-pointer text-start text-[14px]'>Play free games online</li>
               </ul>
               <div className='mt-[6px]'>
                   <Link to='/signup'>

@@ -1,11 +1,23 @@
 <!DOCTYPE html>
 <html>
   <head>
-
+    <title>Twika | Racing Car</title>
   </head>
   <body style="background-color: #000000; text-align: center">
       <canvas id="gameCanvas" style="width: 512px; height: 384px" width="1024" height="768"></canvas>
+      <button id="fullscreen-button">Enter Full Screen</button>
 
+      <script>
+        const fullscreenButton = document.getElementById('fullscreen-button');
+  
+        fullscreenButton.addEventListener('click', () => {
+          if (!document.fullscreenElement) {
+            canvas.requestFullscreen();
+          } else {
+            document.exitFullscreen();
+          }
+        });
+      </script>
       <script src="main.min.js"></script>
   </body>
 </html>
