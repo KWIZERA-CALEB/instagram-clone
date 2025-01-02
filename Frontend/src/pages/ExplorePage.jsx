@@ -55,6 +55,11 @@ const ExplorePage = () => {
             gameLink: "/games/egg-catching.html"
         },
         {
+            gameName: "Aviator",
+            gameScreenShot: "/images/egg.png",
+            gameLink: "/games/aviator/index.html"
+        },
+        {
             gameName: "Flappy bird",
             gameScreenShot: "/images/bird.png",
             gameLink: "/games/fly-bird.html"

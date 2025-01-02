@@ -25,6 +25,22 @@ const context = canvas.getContext('2d');
 
 const grid = 32;
 
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'F' || event.key === 'f') {
+      if (!document.fullscreenElement) {
+        canvas.requestFullscreen()
+          .catch(err => {
+            console.error(`Failed to enter fullscreen: ${err.message}`);
+          });
+      } else {
+        document.exitFullscreen()
+          .catch(err => {
+            console.error(`Failed to exit fullscreen: ${err.message}`);
+          });
+      }
+    }
+  });
+
 // each even row is 8 bubbles long and each odd row is 7 bubbles long.
 // the level consists of 4 rows of bubbles of 4 colors: red, orange,
 // green, and yellow
