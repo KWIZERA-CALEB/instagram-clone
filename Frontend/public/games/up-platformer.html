@@ -53,6 +53,23 @@ a {
 
 
 <script>
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'F' || event.key === 'f') {
+      if (!document.fullscreenElement) {
+        canvas.requestFullscreen()
+          .catch(err => {
+            console.error(`Failed to enter fullscreen: ${err.message}`);
+          });
+      } else {
+        document.exitFullscreen()
+          .catch(err => {
+            console.error(`Failed to exit fullscreen: ${err.message}`);
+          });
+      }
+    }
+  });
+
  
 var map = {
 

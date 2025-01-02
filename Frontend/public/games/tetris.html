@@ -25,6 +25,23 @@
 <canvas width="320" height="640" id="game"></canvas>
 <script>
 
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'F' || event.key === 'f') {
+      if (!document.fullscreenElement) {
+        canvas.requestFullscreen()
+          .catch(err => {
+            console.error(`Failed to enter fullscreen: ${err.message}`);
+          });
+      } else {
+        document.exitFullscreen()
+          .catch(err => {
+            console.error(`Failed to exit fullscreen: ${err.message}`);
+          });
+      }
+    }
+  });
+
+
 // get a random integer between the range of [min,max]
 // @see https://stackoverflow.com/a/1527820/2124254
 function getRandomInt(min, max) {

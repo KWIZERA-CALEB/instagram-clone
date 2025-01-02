@@ -18,14 +18,27 @@
   </style>
 </head>
 <body>
-  <div id="controls">
-    <button id="fullscreen-button">Enter Full Screen</button>
-  </div>
 <canvas width="400" height="400" id="game"></canvas>
 <script>
 const canvas = document.getElementById('game');
 const context = canvas.getContext('2d');
-const fullscreenButton = document.getElementById('fullscreen-button');
+
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'F' || event.key === 'f') {
+      if (!document.fullscreenElement) {
+        canvas.requestFullscreen()
+          .catch(err => {
+            console.error(`Failed to enter fullscreen: ${err.message}`);
+          });
+      } else {
+        document.exitFullscreen()
+          .catch(err => {
+            console.error(`Failed to exit fullscreen: ${err.message}`);
+          });
+      }
+    }
+  });
 
 
 const grid = 64;
@@ -284,15 +297,6 @@ function loop() {
     showWin();
   }
 }
-
-// Full-screen functionality
-fullscreenButton.addEventListener('click', () => {
-  if (!document.fullscreenElement) {
-    canvas.requestFullscreen();
-  } else {
-    document.exitFullscreen();
-  }
-});
 
 
 
