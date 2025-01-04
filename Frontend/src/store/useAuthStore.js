@@ -10,20 +10,65 @@ export const useAuthStore = create((set, get) => ({
     authUser: null,
     isSigningUp: false,
     isLoggingIn: false,
-    isCheckingAuth: true,
+    isCheckingAuth: false,
     onlineUsers: [],
     socket: null,
+    likedPosts: [],
+    selectedPublicProfile: null,
+    selectedPublicProfilePosts: [],
 
     checkAuth: async () => {
+        set({ isCheckingAuth: true });
         try {
             const res = await axiosInstance.get("/auth/loggedin-user");
-            set({ authUser: res.data });
+            set({ authUser: res.data, likedPosts: res.data.likedPosts, });
+            setTimeout(() => {
+                set({ isCheckingAuth: false });
+            }, 5000)
             get().connectSocket();
         } catch (error) {
             console.log("Error in checkAuth:", error);
             set({ authUser: null });
         } finally {
-            set({ isCheckingAuth: false });
+            setTimeout(() => {
+                set({ isCheckingAuth: false });
+            }, 5000)
+        }
+    },
+
+    updateProfileImage: async (data) => {
+        try {
+            const res = await axiosInstance.post("/auth/update-profile-image", data);
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
+    updateProfileDetails: async (data) => {
+        try {
+            const res = await axiosInstance.post("/auth/update-profile-info", data);
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
+    fetchPublicUserProfileInfo: async (username) => {
+        try {
+            const res = await axiosInstance.get(`/auth/public-profile/${username}`);
+            set({ selectedPublicProfile: res.data, selectedPublicProfilePosts: res.data.posts });
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
+    updateLikedPosts: (postId, isLiked) => {
+        try {
+            set(() => {
+                const updatedLikedPosts = isLiked ?  [...state.likedPosts, postId] : state.likedPosts.filter((id) => id !== postId);
+                return { likedPosts: updatedLikedPosts };
+            })
+        } catch(error) {
+            console.log(error)
         }
     },
 

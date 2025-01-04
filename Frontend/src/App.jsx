@@ -4,31 +4,28 @@ import NotFoundPage from './pages/NotFoundPage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import ProfilePage from './pages/ProfilePage'
-import { useAuthStore } from './store/useAuthStore'
-import { useEffect } from 'react'
 import ProtectedRoute from './components/atoms/ProtectedRoute'
 import AuthProtectedRoute from './components/atoms/AuthProtectedRoute'
 import ExplorePage from './pages/ExplorePage'
 import InboxPage from './pages/InboxPage'
+import PublicUserProfile from './pages/PublicUserProfile'
 
 
 const App = () => {
-  const { checkAuth, onlineUsers } = useAuthStore()
-
-  console.log(onlineUsers)
-
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
-
+  
   return (
     <>
       <Routes>
         <Route path='/' element={
             <HomePage />
         } />
+        <Route path='/profile/:username' element={
+            <PublicUserProfile />
+        } />
         <Route path='/inbox' element={
+          <ProtectedRoute>
             <InboxPage />
+          </ProtectedRoute>
         } />
         <Route path='/explore' element={
             <ExplorePage />

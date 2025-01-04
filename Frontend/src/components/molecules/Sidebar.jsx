@@ -73,7 +73,7 @@ const Sidebar = () => {
         setColor(event.target.value);
     }
   return (
-    <div className='w-[200px] bg-[#000] fixed left-0 h-[100vh] border-r-[1px] border-[#333]/[50%] border-solid flex justify-start pr-[10px] pl-[10px] pt-[30px] pb-[30px]'>
+    <div className='w-[200px] hidden bg-[#000] fixed left-0 h-[100vh] border-r-[1px] border-[#333]/[50%] border-solid md:flex justify-start pr-[10px] pl-[10px] pt-[30px] pb-[30px]'>
         {/* create post modal */}
         <Modal className="custom-modal" width={600} centered open={isCreatePostModalOpen} onOk={handleOk} footer={null} onCancel={handleCancel}>
             <p className='font-afacadFlux font-normal select-none cursor-pointer'>Create New Post</p>
@@ -179,12 +179,21 @@ const Sidebar = () => {
         {/* top sidebar */}
 
         {/* bottom sidebar */}
-        <div onClick={handleLogout} className='flex flex-row items-center space-x-[12px] w-full rounded-[6px] cursor-pointer hover:bg-[#333]/[50%] p-[6px]'>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height='20' width='20' fill="#fff">
-                <path d="M3 4H21V6H3V4ZM3 11H21V13H3V11ZM3 18H21V20H3V18Z"></path>
-            </svg>
-            <p className='text-[#fff] font-bold font-afacadFlux'>More</p>
-        </div>
+        {authUser ? 
+            <div onClick={handleLogout} className='flex flex-row items-center space-x-[12px] w-full rounded-[6px] cursor-pointer hover:bg-[#333]/[50%] p-[6px]'>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height='20' width='20' fill="#fff">
+                    <path d="M5 11H13V13H5V16L0 12L5 8V11ZM3.99927 18H6.70835C8.11862 19.2447 9.97111 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C9.97111 4 8.11862 4.75527 6.70835 6H3.99927C5.82368 3.57111 8.72836 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C8.72836 22 5.82368 20.4289 3.99927 18Z"></path>
+                </svg>
+                <p className='text-[#fff] font-bold font-afacadFlux'>Logout</p>
+            </div>
+            :
+            <div onClick={handleLogout} className='flex flex-row items-center space-x-[12px] w-full rounded-[6px] cursor-pointer hover:bg-[#333]/[50%] p-[6px]'>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height='20' width='20' fill="#fff">
+                    <path d="M10 11V8L15 12L10 16V13H1V11H10ZM2.4578 15H4.58152C5.76829 17.9318 8.64262 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C8.64262 4 5.76829 6.06817 4.58152 9H2.4578C3.73207 4.94289 7.52236 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C7.52236 22 3.73207 19.0571 2.4578 15Z"></path>
+                </svg>
+                <p className='text-[#fff] font-bold font-afacadFlux'><Link to='/login'>Login</Link></p>
+            </div>
+        }
         {/* bottom sidebar */}
 
       </div>

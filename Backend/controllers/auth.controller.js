@@ -1,4 +1,5 @@
 import UserModel from "../models/user.model.js";
+import PostModel from "../models/posts.model.js"
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils.js";
 
@@ -97,6 +98,78 @@ export const logoutUser = (req, res) => {
 export const getLoggedInUser = async (req, res) => {
     try {
         res.status(200).json(req.user);
+    } catch(error) {
+        console.log("Error in auth controller", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+export const updateProfileImage = async (req, res) => {
+    try {
+        const { profileImage } = req.body
+        if (!profileImage) {
+            return res.status(400).json({ message: "Profile image URL is required" });
+        }
+        const userId = req.user._id;
+
+        const updatedUser = await UserModel.findByIdAndUpdate(
+            userId,
+            { profileImage },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json(updatedUser);
+    } catch(error) {
+        console.log("Error in auth controller", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+export const updateProfileDetails = async (req, res) => {
+    try {
+        const { username, bio, fullName } = req.body
+        
+        const userId = req.user._id;
+
+        const updatedUser = await UserModel.findByIdAndUpdate(
+            userId,
+            { username, bio, fullName },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json(updatedUser);
+    } catch(error) {
+        console.log("Error in auth controller", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+export const userPublicProfileInfo = async (req, res) => {
+    try {
+        const { username } = req.params
+        
+        const user = await UserModel.findOne({username: username}).select("-password")
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const userId = user._id
+
+        const userPosts = await PostModel.find({ userId: user._id }).lean();
+
+        res.status(200).json({
+            user,
+            posts: userPosts,
+        });
     } catch(error) {
         console.log("Error in auth controller", error);
         res.status(500).json({ message: "Internal Server Error" });

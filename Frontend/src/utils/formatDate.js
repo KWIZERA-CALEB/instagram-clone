@@ -25,11 +25,11 @@ export const getPastTime = (createdAt) => {
 export const formatPastTime = (pastTime) => {
     const { years, months, days, hours, minutes, seconds } = pastTime;
 
-    if (years > 0) return `${years} years`;
-    if (months > 0) return `${months} months`;
-    if (days > 0) return `${days} days`;
-    if (hours > 0) return `${hours} hours`;
-    if (minutes > 0) return `${minutes} minutes`;
+    if (years > 0) return `${years} year(s)`;
+    if (months > 0) return `${months} month(s)`;
+    if (days > 0) return `${days} day(s)`;
+    if (hours > 0) return `${hours} hour(s)`;
+    if (minutes > 0) return `${minutes} minute(s)`;
     return `${seconds} seconds ago`;
 }
 // export const formatPastTime = (pastTime) => {
