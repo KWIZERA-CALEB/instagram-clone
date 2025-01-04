@@ -49,6 +49,17 @@ html {
     animation: loadingBar 5s linear infinite;
 }
 
+.glassy {
+    width: 100%; /* Set your desired width */
+    height: 100px; /* Set your desired height */
+    background: rgba(255, 255, 255, 0.1); /* Transparent white background */
+    border-radius: 15px; /* Smooth rounded corners */
+    backdrop-filter: blur(10px); /* Apply blur effect */
+    -webkit-backdrop-filter: blur(10px); /* For Safari */
+    color: #fff; /* Text color for visibility */
+}
+  
+
 @keyframes loadingBar {
     0% {
         width: 0;

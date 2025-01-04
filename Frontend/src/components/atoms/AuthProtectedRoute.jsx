@@ -1,11 +1,22 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../store/useAuthStore';
+import { useEffect } from 'react';
+import FullScreenPreloader from '../molecules/FullScreenPreloader';
 
 const AuthProtectedRoute = ({ children }) => {
-    const { authUser } = useAuthStore();
+    const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+    const location = useLocation();
+
+    useEffect(() => {
+        checkAuth()
+    }, [checkAuth])
+
+    if (isCheckingAuth) {
+        return <FullScreenPreloader />; 
+    }
 
     if (authUser) { 
-        return <Navigate to="/" />; 
+        return <Navigate to={location.state?.from || "/"} replace />; 
     } 
     
     return children;

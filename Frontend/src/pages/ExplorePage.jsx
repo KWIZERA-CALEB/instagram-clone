@@ -1,6 +1,7 @@
 import Sidebar from "../components/molecules/Sidebar"
 import Preloader from '../components/atoms/Preloader'
 import { Button } from 'antd'
+import MobileNavigation from "../components/molecules/MobileNavigation"
 
 const ExplorePage = () => {
     const games = [
@@ -102,20 +103,19 @@ const ExplorePage = () => {
     ]
   return (
     <div className='flex flex-row min-h-screen'>
+        <MobileNavigation />
         {/* preloader */}
         <Preloader />
         {/* preloader */}
         <Sidebar />
-        <div className='ml-[200px] p-[50px] bg-[#000] flex-1'>
+        <div className='md:ml-[200px] p-[20px] md:p-[50px] bg-[#000] w-full md:flex-1'>
 
-            <div className='grid grid-cols-3 gap-4'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
                 {games.map((game, index) => (
-                    <div key={index} className='h-[300px] bg-[radial-gradient(circle,_#3b82f6,_#ef4444)] pt-[10px] overflow-hidden mt-[20px] relative'>
-                        <p className='font-afacadFlux font-bold select-none cursor-pointer text-center text-[14px]'>Game Name: {game.gameName}</p>
-                        <div className='w-full'>
-                            <img src={game.gameScreenShot} className='w-full object-center' alt={game.gameName} />
-                        </div>
-                        <div className='absolute w-full flex justify-center bottom-[10px]'>
+                    <div key={index} className='h-[300px] pt-[10px] overflow-hidden mt-[20px] relative'>
+                        <img src={game.gameScreenShot} className='w-full h-full rounded-[15px] object-center' alt={game.gameName} />
+                        <div className='absolute w-full glassy p-[10px] bottom-0 left-0 right-0'>
+                            <p className='font-afacadFlux font-black uppercase select-none cursor-pointer text-center text-[14px]'>Game Name: {game.gameName}</p>
                             <a href={game.gameLink} target='_blank'>
                                 <Button className='bg-sky-400 font-afacadFlux mt-[5px] w-full fonnt-bold border-[0px] text-[#fff]'>Launch Game</Button>
                             </a>
