@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Twika | Deer Hunting</title>
+    <style>
+        body {
+            background-color: white;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+	.embed-footer {
+		display: none !important;
+	}
+        .game-container {
+            width: 920px;
+            height: 605px;
+            position: relative;
+        }
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+	.policy {
+		display: none !important;
+	}
+
+.overlay {
+        position: absolute;
+        bottom: 0; /* Position the overlay at the bottom of the iframe */
+        height: 50px; /* Adjust to cover the footer height */
+        width: 100%;
+        background: white; /* Or any background matching your site's theme */
+        pointer-events: none; /* Allows clicks to pass through to the iframe */
+    }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div id="loading">
+            <img src="https://www.gameflare.com/images/loading.svg" alt="Loading">
+        </div>
+        <iframe id="iframe-in-game"
+            src="https://www.gameflare.com/embed/deer-hunter/"
+            marginwidth="0"
+            marginheight="0"
+            frameborder="0"
+            scrolling="no"
+            width="920"
+            height="605"
+            allow="autoplay; fullscreen"
+            allowfullscreen
+            onload="document.getElementById('loading').style.display='none';"
+        ></iframe>
+<div class="overlay"></div>
+    </div>
+</body>
+</html>

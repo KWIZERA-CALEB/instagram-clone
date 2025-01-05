@@ -18,6 +18,8 @@ export const useAuthStore = create((set, get) => ({
     selectedPublicProfilePosts: [],
 
     checkAuth: async () => {
+        if (get().authUser) return; 
+
         set({ isCheckingAuth: true });
         try {
             const res = await axiosInstance.get("/auth/loggedin-user");
@@ -30,9 +32,10 @@ export const useAuthStore = create((set, get) => ({
             console.log("Error in checkAuth:", error);
             set({ authUser: null });
         } finally {
-            setTimeout(() => {
-                set({ isCheckingAuth: false });
-            }, 5000)
+            // setTimeout(() => {
+            //     set({ isCheckingAuth: false });
+            // }, 5000)
+            set({ isCheckingAuth: false });
         }
     },
 

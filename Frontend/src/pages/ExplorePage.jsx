@@ -6,6 +6,16 @@ import MobileNavigation from "../components/molecules/MobileNavigation"
 const ExplorePage = () => {
     const games = [
         {
+            gameName: "Call of Duty (Zombie)",
+            gameScreenShot: "https://user-images.githubusercontent.com/2433219/94984424-044e0a80-0509-11eb-903a-c114d5b6f061.png",
+            gameLink: "/games/call-of-duty.html"
+        },
+        {
+            gameName: "Deer Hunting",
+            gameScreenShot: "https://user-images.githubusercontent.com/2433219/94984424-044e0a80-0509-11eb-903a-c114d5b6f061.png",
+            gameLink: "/games/deer-hunting.html"
+        },
+        {
             gameName: "Snake Game",
             gameScreenShot: "https://user-images.githubusercontent.com/2433219/94984424-044e0a80-0509-11eb-903a-c114d5b6f061.png",
             gameLink: "/games/snake.html"
