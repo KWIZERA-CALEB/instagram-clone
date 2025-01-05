@@ -9,12 +9,13 @@ import AuthProtectedRoute from './components/atoms/AuthProtectedRoute'
 import ExplorePage from './pages/ExplorePage'
 import InboxPage from './pages/InboxPage'
 import PublicUserProfile from './pages/PublicUserProfile'
+import AppInitializer from './components/atoms/AppInitializer'
 
 
 const App = () => {
   
   return (
-    <>
+    <AppInitializer>
       <Routes>
         <Route path='/' element={
             <HomePage />
@@ -47,7 +48,7 @@ const App = () => {
         } />
         <Route path='*' element={<NotFoundPage />} />
       </Routes>
-    </>
+    </AppInitializer>
   )
 }
 

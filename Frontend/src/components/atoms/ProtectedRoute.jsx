@@ -5,10 +5,12 @@ import FullScreenPreloader from '../molecules/FullScreenPreloader';
 
 const ProtectedRoute = ({ children }) => {
     const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
-    useEffect(() => {
-        checkAuth()
-    }, [checkAuth])
 
+    useEffect(() => {
+        if (!authUser) {
+            checkAuth();
+        }
+    }, [authUser, checkAuth]);
 
     if (isCheckingAuth) {
         return <FullScreenPreloader />; 

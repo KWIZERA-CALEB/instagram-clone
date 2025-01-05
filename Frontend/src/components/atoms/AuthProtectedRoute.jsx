@@ -8,8 +8,10 @@ const AuthProtectedRoute = ({ children }) => {
     const location = useLocation();
 
     useEffect(() => {
-        checkAuth()
-    }, [checkAuth])
+        if (!authUser) {
+            checkAuth();
+        }
+    }, [authUser, checkAuth]);
 
     if (isCheckingAuth) {
         return <FullScreenPreloader />; 
