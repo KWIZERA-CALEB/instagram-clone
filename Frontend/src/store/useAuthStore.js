@@ -10,7 +10,7 @@ export const useAuthStore = create((set, get) => ({
     authUser: null,
     isSigningUp: false,
     isLoggingIn: false,
-    isCheckingAuth: false,
+    isCheckingAuth: true,
     onlineUsers: [],
     socket: null,
     likedPosts: [],
@@ -19,14 +19,10 @@ export const useAuthStore = create((set, get) => ({
 
     checkAuth: async () => {
         if (get().authUser) return; 
-
         set({ isCheckingAuth: true });
         try {
             const res = await axiosInstance.get("/auth/loggedin-user");
             set({ authUser: res.data, likedPosts: res.data.likedPosts, });
-            setTimeout(() => {
-                set({ isCheckingAuth: false });
-            }, 5000)
             get().connectSocket();
         } catch (error) {
             console.log("Error in checkAuth:", error);
